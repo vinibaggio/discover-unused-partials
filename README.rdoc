@@ -1,0 +1,17 @@
+== Description
+
+This utility script (which someday will be a Rails plug-in) was made in order to 
+help developers to find out unused partials. Beware that dynamic named partials 
+(such as +render @post+ por render :partial => my_var) are NOT detected, so
+you need to be careful when checking that list.
+
+
+== Usage
+
+To use this script, simply run it in your RAILS_ROOT. It will return a list of 
+unmentioned partials. It supports detection of Haml and Erb (both .erb and
+.rhtml) templates.
+
+=== Thanks
+Special thanks goes to Willian Molinari (PotHix) and Mateus Linhares
+(mateuslinhares) that helped me writing this little script.
