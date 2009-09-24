@@ -48,7 +48,6 @@ def check_extension_path(file)
   elsif File.exists? file + ".html.haml"
     file += ".html.haml"
   else
-    # FUUUUUUUUUUU)!!!!!!onze1111!centoeonze
     file += ".rhtml"
   end
   file
@@ -68,8 +67,7 @@ end
 existent = existent_partials("app").sort
 used = used_partials("app").sort
 
-if (existent & used) == existent
-else
-  unused = (existent - (existent & used))
+unless (existent & used) == existent
+  unused = (existent - used)
   puts unused * "\n"
 end
