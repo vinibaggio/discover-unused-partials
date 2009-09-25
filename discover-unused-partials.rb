@@ -14,28 +14,30 @@ end
 def used_partials root
   partials = []
   each_file(root) do |file|
-    File.open(file).readlines.each do |line|
-      line.strip!
-      if line =~ /:partial\s+=>\s+\"([a-zA-Z_\/]+)\"/
-        match = $1
-        if match[0] == ?/ or match[0] == '/'
-          match = match[1..-1]
-        end
-
-        if match.index("/")
-
-          path = match.split('/')[0...-1].join('/')
-          file_name = "_#{match.split('/')[-1]}"
-
-          full_path = "app/views/#{path}/#{file_name}"
-        else
-          if file =~ /app\/controllers\/(.*)_controller.rb/
-            full_path = "app/views/#{$1}/_#{match}"
-          else
-            full_path = "#{file.split('/')[0...-1].join('/')}/_#{match}"
+    File.open(file) do |f|
+      f.each do |line|
+        line.strip!
+        if line =~ /:partial\s+=>\s+\"([a-zA-Z_\/]+)\"/
+          match = $1
+          if match[0] == ?/ or match[0] == '/'
+            match = match[1..-1]
           end
+
+          if match.index("/")
+
+            path = match.split('/')[0...-1].join('/')
+            file_name = "_#{match.split('/')[-1]}"
+
+            full_path = "app/views/#{path}/#{file_name}"
+          else
+            if file =~ /app\/controllers\/(.*)_controller.rb/
+              full_path = "app/views/#{$1}/_#{match}"
+            else
+              full_path = "#{file.split('/')[0...-1].join('/')}/_#{match}"
+            end
+          end
+          partials << check_extension_path(full_path)
         end
-        partials << check_extension_path(full_path)
       end
     end
   end
