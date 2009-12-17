@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "VERSION",
+     "bin/discover-unused-partials",
      "discover-unused-partials.gemspec",
      "lib/discover-unused-partials.rb",
      "spec/discover-unused-partials_spec.rb",
