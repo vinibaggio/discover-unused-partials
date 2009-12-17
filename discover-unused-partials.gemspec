@@ -10,15 +10,24 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Vinicius Baggio", "Willian Molinari (a.k.a PotHix)"]
   s.date = %q{2009-12-17}
+  s.default_executable = %q{discover-unused-partials}
   s.description = %q{A script to help you finding out unused partials. Good for big projects or projects under heavy refactoring}
   s.email = %q{vinibaggio@gmail.com}
+  s.executables = ["discover-unused-partials"]
   s.extra_rdoc_files = [
     "LICENSE",
      "README.rdoc"
   ]
   s.files = [
-    "README.rdoc",
-     "VERSION"
+    "LICENSE",
+     "README.rdoc",
+     "Rakefile",
+     "VERSION",
+     "discover-unused-partials.gemspec",
+     "lib/discover-unused-partials.rb",
+     "spec/discover-unused-partials_spec.rb",
+     "spec/spec.opts",
+     "spec/spec_helper.rb"
   ]
   s.homepage = %q{http://github.com/vinibaggio/discover-unused-partials}
   s.rdoc_options = ["--charset=UTF-8"]

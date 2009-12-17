@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+require 'discover-unused-partials'
+require 'optparse'
+
+options = Hash.new
+OptionParser.new do |opts|
+  opts.banner = "Usage: discover-unused-partials [options]"
+
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts opts
+    exit
+  end
+
+  opts.parse!
+end
+
+DiscoverUnusedPartials::find_in options
