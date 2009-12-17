@@ -37,8 +37,8 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{Discover your unused partials}
   s.test_files = [
-    "spec/spec_helper.rb",
-     "spec/discover-unused-partials_spec.rb"
+    "spec/discover-unused-partials_spec.rb",
+     "spec/spec_helper.rb"
   ]
 
   if s.respond_to? :specification_version then

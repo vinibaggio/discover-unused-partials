@@ -1,5 +1,6 @@
 module DiscoverUnusedPartials
 
+  #TODO: Prepare to give directory by argument
   def self.find_in directory
     worker = PartialWorker.new
 
