@@ -31,7 +31,7 @@ module DiscoverUnusedPartials
         File.open(file) do |f|
           f.each do |line|
             line.strip!
-            if line =~ /:partial\s+=>\s+\"([a-zA-Z_\/]+)\"/
+            if line =~ /:partial\s+=>\s+[\"\']([a-zA-Z_\/]+)[\"\']/
               match = $1
               if match[0] == ?/ or match[0] == '/'
                 match = match[1..-1]
