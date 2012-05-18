@@ -4,12 +4,18 @@ module DiscoverUnusedPartials
   def self.find_in directory
     worker = PartialWorker.new
 
-    existent = worker.existent_partials("app").sort
-    used = worker.used_partials("app").sort
+    existent = worker.existent_partials("app")
+    used, dynamic = worker.used_partials("app")
 
     unless (existent & used) == existent
       unused = (existent - used)
       puts unused * "\n"
+      if !dynamic.empty?
+        puts "\nSome of the partials above might be loaded dynamically by the following lines of code:\n\n"
+        dynamic.each do |d|
+          puts "#{d[0]}: #{d[1]}"
+        end
+      end
     end
   end
 
@@ -32,6 +38,7 @@ module DiscoverUnusedPartials
 
     def used_partials root
       partials = []
+      dynamic = []
       each_file(root) do |file|
         File.open(file) do |f|
           f.each do |line|
@@ -52,11 +59,13 @@ module DiscoverUnusedPartials
                 end
               end
               partials << check_extension_path(full_path)
+            elsif line =~ /#@@partial|#@@render["']/
+              dynamic << [file, line]
             end
           end
         end
       end
-      partials.uniq.sort
+      [partials.uniq.sort, dynamic]
     end
 
     def check_extension_path(file)
