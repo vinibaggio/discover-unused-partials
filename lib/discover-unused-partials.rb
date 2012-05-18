@@ -14,6 +14,10 @@ module DiscoverUnusedPartials
   end
 
   class PartialWorker
+    @@filename = /[a-zA-Z\d_\/]+?/
+    @@extension = /\.\w+/
+    @@partial = /:partial\s*=>\s*|partial:\s*/
+    @@render = /\brender\s*(?:\(\s*)?/
 
     def existent_partials root
       partials = []
@@ -32,12 +36,8 @@ module DiscoverUnusedPartials
         File.open(file) do |f|
           f.each do |line|
             line.strip!
-            if line =~ /:partial\s+=>\s+[\"\']([a-zA-Z_\/]+)[\"\']/
-              match = $1
-              if match[0] == ?/ or match[0] == '/'
-                match = match[1..-1]
-              end
-
+            if line =~ %r[(?:#@@partial|#@@render)(['"])/?(#@@filename)#@@extension*\1]
+              match = $2
               if match.index("/")
 
                 path = match.split('/')[0...-1].join('/')
