@@ -3,17 +3,27 @@ module DiscoverUnusedPartials
   #TODO: Prepare to give directory by argument
   def self.find_in directory
     worker = PartialWorker.new
+    tree, dynamic = worker.used_partials("app")
 
-    existent = worker.existent_partials("app")
-    used, dynamic = worker.used_partials("app")
+    tree.each do |idx, level|
+      indent = " " * idx*2
+      h_indent = idx == 1 ? "" : "\n" + " "*(idx-1)*2
 
-    unless (existent & used) == existent
-      unused = (existent - used)
-      puts unused * "\n"
-      if !dynamic.empty?
-        puts "\nSome of the partials above might be loaded dynamically by the following lines of code:\n\n"
-        dynamic.each do |d|
-          puts "#{d[0]}: #{d[1]}"
+      if idx == 1
+        puts "#{h_indent}The following partials are not referenced directly by any code:"
+      else
+        puts "#{h_indent}The following partials are only referenced directly by the partials above:"
+      end
+      level[:unused].sort.each do |partial|
+        puts "#{indent}#{partial}"
+      end
+    end
+
+    unless dynamic.empty?
+      puts "\n\nSome of the partials above (at any level) might be referenced dynamically by the following lines of code:"
+      dynamic.each do |file, lines|
+        lines.each do |line|
+          puts "  #{file}:#{line}"
         end
       end
     end
@@ -33,13 +43,42 @@ module DiscoverUnusedPartials
         end
       end
 
-      partials.sort
+      partials
     end
 
     def used_partials root
-      partials = []
-      dynamic = []
+      files = []
       each_file(root) do |file|
+        files << file
+      end
+      tree = {}
+      level = 1
+      existent = existent_partials(root)
+      top_dynamic = nil
+      loop do
+        used, dynamic = process_partials(files)
+        break if level > 1 && used.size == tree[level-1][:used].size
+        tree[level] = {
+          used: used,
+        }
+        if level == 1
+          top_dynamic = dynamic
+          tree[level][:unused] = existent - used
+        else
+          tree[level][:unused] = tree[level-1][:used] - used
+        end
+        break unless (files - tree[level][:unused]).size < files.size
+        files -= tree[level][:unused]
+        level += 1
+      end
+      [tree, top_dynamic]
+    end
+
+    def process_partials(files)
+      partials = []
+      dynamic = {}
+      files.each do |file|
+        #next unless FileTest.exists?(file)
         File.open(file) do |f|
           f.each do |line|
             line.strip!
@@ -60,12 +99,14 @@ module DiscoverUnusedPartials
               end
               partials << check_extension_path(full_path)
             elsif line =~ /#@@partial|#@@render["']/
-              dynamic << [file, line]
+              dynamic[file] ||= []
+              dynamic[file] << line
             end
           end
         end
       end
-      [partials.uniq.sort, dynamic]
+      partials.uniq!
+      [partials, dynamic]
     end
 
     def check_extension_path(file)
