@@ -74,6 +74,7 @@ module DiscoverUnusedPartials
       files = Dir.glob("#{root}/*")
       files.each do |file|
         if File.directory? file
+          next if file =~ %r[^app/assets]
           each_file(file) {|file| yield file}
         else
           yield file
