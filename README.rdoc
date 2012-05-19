@@ -1,9 +1,7 @@
 == Description
 
 This utility script (which someday will be a Rails plug-in) was made in order to 
-help developers to find out unused partials. Beware that dynamic named partials 
-(such as +render @post+ or render :partial => my_var) are NOT detected, so
-you need to be careful while checking that list.
+help developers to find out unused partials.
 
 
 == Usage
