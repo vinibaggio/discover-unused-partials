@@ -21,7 +21,7 @@ module DiscoverUnusedPartials
 
     unless dynamic.empty?
       puts "\n\nSome of the partials above (at any level) might be referenced dynamically by the following lines of code:"
-      dynamic.each do |file, lines|
+      dynamic.sort.map do |file, lines|
         lines.each do |line|
           puts "  #{file}:#{line}"
         end
