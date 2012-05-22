@@ -127,6 +127,7 @@ module DiscoverUnusedPartials
           next if file =~ %r[^app/assets]
           each_file(file) {|file| yield file}
         else
+          next if file =~ /\.js\b/
           yield file
         end
       end
