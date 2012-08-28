@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 module DiscoverUnusedPartials
 
   #TODO: Prepare to give directory by argument

@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# -*- coding: UTF-8 -*-
 
 require 'discover-unused-partials'
 require 'optparse'
