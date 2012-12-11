@@ -6,10 +6,14 @@ help developers to find out unused partials.
 
 == Usage
 
-To use this script, simply run it in your RAILS_ROOT. It will return a list of 
+=== Install the gem
+  gem install discover-unused-partials
+
+=== Run the script
+To use this script, simply run `discover-unused-partials` in your RAILS_ROOT. It will return a list of 
 unmentioned partials. It supports detection of Haml and Erb (both .erb and
 .rhtml) templates.
 
-=== Thanks
+== Thanks
 Special thanks goes to Willian Molinari (PotHix) and Mateus Linhares
 (mateuslinhares) that helped me writing this little script.
