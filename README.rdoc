@@ -3,16 +3,20 @@
 This utility script (which someday will be a Rails plug-in) was made in order to 
 help developers to find out unused partials.
 
-
 == Usage
 
 === Install the gem
   gem install discover-unused-partials
 
 === Run the script
-To use this script, simply run `discover-unused-partials` in your RAILS_ROOT. It will return a list of 
-unmentioned partials. It supports detection of Haml and Erb (both .erb and
-.rhtml) templates.
+To use this script, simply run
+
+  discover-unused-partials path/to/your/rails_root
+
+If path is not provided, script is executed in the current directory
+
+It will return a list of unmentioned partials. 
+It supports detection of Haml and Erb (both .erb and .rhtml) templates.
 
 == Thanks
 Special thanks goes to Willian Molinari (PotHix) and Mateus Linhares

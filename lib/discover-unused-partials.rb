@@ -1,10 +1,9 @@
 # -*- coding: UTF-8 -*-
 module DiscoverUnusedPartials
 
-  #TODO: Prepare to give directory by argument
-  def self.find_in directory
+  def self.find options={}
     worker = PartialWorker.new
-    tree, dynamic = worker.used_partials("app")
+    tree, dynamic = Dir.chdir(options[:root] || '.'){ worker.used_partials("app") }
 
     tree.each do |idx, level|
       indent = " " * idx*2
@@ -48,6 +47,7 @@ module DiscoverUnusedPartials
     end
 
     def used_partials root
+      raise "#{Dir.pwd} does not have '#{root}' directory" unless File.directory? root
       files = []
       each_file(root) do |file|
         files << file

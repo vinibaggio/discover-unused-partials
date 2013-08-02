@@ -4,7 +4,7 @@
 require 'discover-unused-partials'
 require 'optparse'
 
-options = Hash.new
+options = {}
 OptionParser.new do |opts|
   opts.banner = "Usage: discover-unused-partials [options]"
 
@@ -15,5 +15,6 @@ OptionParser.new do |opts|
 
   opts.parse!
 end
+options[:root] = ARGV.first
 
-DiscoverUnusedPartials::find_in options
+DiscoverUnusedPartials::find options 
