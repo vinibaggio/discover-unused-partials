@@ -15,6 +15,9 @@ OptionParser.new do |opts|
 
   opts.parse!
 end
-options[:root] = ARGV.first
+options[:root] = ARGV.first || '.'
 
-DiscoverUnusedPartials::find options 
+config = File.join options[:root], 'config/discover-unused-partials.yml'
+options.merge! YAML.load_file config if File.exist? config
+
+DiscoverUnusedPartials::find options

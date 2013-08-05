@@ -2,8 +2,8 @@
 module DiscoverUnusedPartials
 
   def self.find options={}
-    worker = PartialWorker.new
-    tree, dynamic = Dir.chdir(options[:root] || '.'){ worker.used_partials("app") }
+    worker = PartialWorker.new options
+    tree, dynamic = Dir.chdir(options[:root]){ worker.used_partials("app") }
 
     tree.each do |idx, level|
       indent = " " * idx*2
@@ -34,6 +34,10 @@ module DiscoverUnusedPartials
     @@extension = /\.\w+/
     @@partial = /:partial\s*=>\s*|partial:\s*/
     @@render = /\brender\s*(?:\(\s*)?/
+    
+    def initialize options
+      @options = options
+    end
 
     def existent_partials root
       partials = []
@@ -76,13 +80,13 @@ module DiscoverUnusedPartials
     end
 
     def process_partials(files)
-      partials = []
+      partials = @options['keep'] || []
       dynamic = {}
       files.each do |file|
-        #next unless FileTest.exists?(file)
         File.open(file) do |f|
           f.each do |line|
             line.strip!
+            debug = /request_email_body/ =~ line
             if line =~ %r[(?:#@@partial|#@@render)(['"])/?(#@@filename)#@@extension*\1]
               match = $2
               if match.index("/")
@@ -100,8 +104,12 @@ module DiscoverUnusedPartials
               end
               partials << check_extension_path(full_path)
             elsif line =~ /#@@partial|#@@render["']/
-              dynamic[file] ||= []
-              dynamic[file] << line
+              if @options["dynamic"] && @options["dynamic"][file]
+                partials += @options["dynamic"][file]
+              else
+                dynamic[file] ||= []
+                dynamic[file] << line
+              end
             end
           end
         end
@@ -109,16 +117,10 @@ module DiscoverUnusedPartials
       partials.uniq!
       [partials, dynamic]
     end
-
+    
+    EXT = %w(.html.erb .text.erb .html.haml .text.haml .rhtml)
     def check_extension_path(file)
-      if File.exists? file + ".html.erb"
-        file += ".html.erb"
-      elsif File.exists? file + ".html.haml"
-        file += ".html.haml"
-      else
-        file += ".rhtml"
-      end
-      file
+      "#{file}#{EXT.find{ |e| File.exists? file + e }}"
     end
 
     def each_file(root, &block)
@@ -128,7 +130,6 @@ module DiscoverUnusedPartials
           next if file =~ %r[^app/assets]
           each_file(file) {|file| yield file}
         else
-          next if file =~ /\.js\b/
           yield file
         end
       end
