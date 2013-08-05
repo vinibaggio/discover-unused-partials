@@ -86,7 +86,6 @@ module DiscoverUnusedPartials
         File.open(file) do |f|
           f.each do |line|
             line.strip!
-            debug = /request_email_body/ =~ line
             if line =~ %r[(?:#@@partial|#@@render)(['"])/?(#@@filename)#@@extension*\1]
               match = $2
               if match.index("/")
