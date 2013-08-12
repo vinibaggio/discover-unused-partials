@@ -18,6 +18,20 @@ If path is not provided, script is executed in the current directory
 It will return a list of unmentioned partials. 
 It supports detection of Haml and Erb (both .erb and .rhtml) templates.
 
+=== Configuration
+To fine-tune script behavior, you can add discover-unused-partials.yml to your app config directory.
+Content of such file:
+
+  # List of files that are not reported
+  keep:
+    - app/views/my/partial/_to_keep.html.erb
+
+  # List of dynamically generated partials and their sources
+  dynamic:
+    app/controllers/user_controller.rb:
+      - app/views/user/_first_dynamic_partial.html.erb
+      - app/views/user/_second_dynamic_partial.text.haml
+      
 == Thanks
 Special thanks goes to Willian Molinari (PotHix) and Mateus Linhares
 (mateuslinhares) that helped me writing this little script.
