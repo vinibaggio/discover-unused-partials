@@ -3,6 +3,7 @@
 
 require 'discover-unused-partials'
 require 'optparse'
+require 'yaml'
 
 options = {}
 OptionParser.new do |opts|
